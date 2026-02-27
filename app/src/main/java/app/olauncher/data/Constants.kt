@@ -82,9 +82,6 @@ object Constants {
     const val FLAG_SET_CLOCK_APP = 13
     const val FLAG_SET_CALENDAR_APP = 14
 
-    const val REQUEST_CODE_ENABLE_ADMIN = 666
-    const val REQUEST_CODE_LAUNCHER_SELECTOR = 678
-
     const val HINT_RATE_US = 15
 
     const val LONG_PRESS_DELAY_MS = 500L

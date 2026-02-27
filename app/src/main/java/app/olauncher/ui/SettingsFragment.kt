@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsets
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -48,6 +49,12 @@ class SettingsFragment : Fragment(), View.OnClickListener, View.OnLongClickListe
     private lateinit var viewModel: MainViewModel
     private lateinit var deviceManager: DevicePolicyManager
     private lateinit var componentName: ComponentName
+
+    private val enableAdminLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == android.app.Activity.RESULT_OK) {
+            prefs.lockModeOn = true
+        }
+    }
 
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
@@ -403,7 +410,7 @@ class SettingsFragment : Fragment(), View.OnClickListener, View.OnLongClickListe
                     DevicePolicyManager.EXTRA_ADD_EXPLANATION,
                     getString(R.string.admin_permission_message)
                 )
-                requireActivity().startActivityForResult(intent, Constants.REQUEST_CODE_ENABLE_ADMIN)
+                enableAdminLauncher.launch(intent)
             }
         }
         populateLockSettings()

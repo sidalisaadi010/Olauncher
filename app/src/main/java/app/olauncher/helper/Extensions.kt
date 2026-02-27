@@ -39,16 +39,6 @@ fun View.showKeyboard(show: Boolean = true) {
 }
 
 
-@RequiresApi(Build.VERSION_CODES.Q)
-fun Activity.showLauncherSelector(requestCode: Int) {
-    val roleManager = getSystemService(Context.ROLE_SERVICE) as RoleManager
-    if (roleManager.isRoleAvailable(RoleManager.ROLE_HOME)) {
-        val intent = roleManager.createRequestRoleIntent(RoleManager.ROLE_HOME)
-        startActivityForResult(intent, requestCode)
-    } else
-        resetDefaultLauncher()
-}
-
 fun Context.resetDefaultLauncher() {
     try {
         val componentName = ComponentName(this, FakeHomeActivity::class.java)

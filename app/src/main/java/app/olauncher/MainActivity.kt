@@ -12,6 +12,7 @@ import android.provider.Settings
 import android.view.View
 import android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
@@ -50,6 +51,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
     private lateinit var binding: ActivityMainBinding
     private var timerJob: Job? = null
+
+    private val launcherSelectorLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            resetLauncherViaFakeActivity()
+        }
+    }
 
 //    override fun onBackPressed() {
 //        if (navController.currentDestination?.id != R.id.mainFragment)
@@ -149,8 +156,15 @@ class MainActivity : AppCompatActivity() {
         viewModel.resetLauncherLiveData.observe(this) {
             if (isDefaultLauncher() || Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
                 resetLauncherViaFakeActivity()
-            else
-                showLauncherSelector(Constants.REQUEST_CODE_LAUNCHER_SELECTOR)
+            else {
+                val roleManager = getSystemService(Context.ROLE_SERVICE) as android.app.role.RoleManager
+                if (roleManager.isRoleAvailable(android.app.role.RoleManager.ROLE_HOME)) {
+                    val intent = roleManager.createRequestRoleIntent(android.app.role.RoleManager.ROLE_HOME)
+                    launcherSelectorLauncher.launch(intent)
+                } else {
+                    app.olauncher.helper.resetDefaultLauncher(this)
+                }
+            }
         }
         viewModel.checkForMessages.observe(this) {
             checkForMessages()
@@ -336,19 +350,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            Constants.REQUEST_CODE_ENABLE_ADMIN -> {
-                if (resultCode == Activity.RESULT_OK)
-                    prefs.lockModeOn = true
-            }
-
-            Constants.REQUEST_CODE_LAUNCHER_SELECTOR -> {
-                if (resultCode == Activity.RESULT_OK)
-                    resetLauncherViaFakeActivity()
-            }
-        }
-    }
 }
