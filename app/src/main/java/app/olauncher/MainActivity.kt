@@ -34,10 +34,10 @@ import app.olauncher.helper.isOlauncherDefault
 import app.olauncher.helper.isTablet
 import app.olauncher.helper.openUrl
 import app.olauncher.helper.rateApp
+import app.olauncher.helper.resetDefaultLauncher
 import app.olauncher.helper.resetLauncherViaFakeActivity
 import app.olauncher.helper.setPlainWallpaper
 import app.olauncher.helper.shareApp
-import app.olauncher.helper.showLauncherSelector
 import app.olauncher.helper.showToast
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -162,7 +162,7 @@ class MainActivity : AppCompatActivity() {
                     val intent = roleManager.createRequestRoleIntent(android.app.role.RoleManager.ROLE_HOME)
                     launcherSelectorLauncher.launch(intent)
                 } else {
-                    app.olauncher.helper.resetDefaultLauncher(this)
+                    resetDefaultLauncher()
                 }
             }
         }
