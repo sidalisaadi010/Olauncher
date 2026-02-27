@@ -142,10 +142,10 @@ If you want to add a custom swipe gesture (e.g., diagonal swipe), check `getSwip
 
 We have set up two GitHub Actions workflows to automate your build and release process.
 
-### 1. Automatic Debug Build
+### 1. Automatic Build (Debug & Release)
 - **File**: `.github/workflows/build-debug.yml`
-- **Trigger**: Runs automatically whenever you push code to the `main` branch.
-- **Action**: It builds the debug APK and uploads it as a build artifact. You can download this APK from the "Actions" tab in your GitHub repository to test your changes.
+- **Trigger**: Runs automatically whenever you push code to the `main` or `master` branch.
+- **Action**: It builds both the debug APK and the unsigned release APK. You can download these APKs from the "Actions" tab in your GitHub repository. The release APK is unsigned and cannot be installed directly; it must be signed first if you intend to use it.
 
 ### 2. Manual Release to Play Store
 - **File**: `.github/workflows/release-app.yml`
